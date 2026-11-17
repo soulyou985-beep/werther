@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>베르테르 되뇌기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f6f1e7; --card:#fffdf8; --ink:#2b2620; --muted:#7a6f62; --line:#e4dccd;
+  --river:#2c4a7c; --river-soft:#dfe6f2; --gold:#b38a1d; --ok:#4f7d4a; --bad:#a6483a;
+}
+@media (prefers-color-scheme: dark){
+  :root{--paper:#16191a; --card:#202526; --ink:#ece6da; --muted:#a29a8c; --line:#343b3c;
+  --river:#8fb0e0; --river-soft:#26324a; --gold:#e0bb4f; --ok:#8fbf87; --bad:#e08a7c;}
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;line-height:1.6}
+.serif{font-family:"Noto Serif KR",serif}
+header{position:sticky;top:0;z-index:5;background:var(--paper);padding:calc(env(safe-area-inset-top) + 14px) 20px 10px;border-bottom:1px solid var(--line)}
+header h1{margin:0;font-family:"Noto Serif KR",serif;font-size:20px;font-weight:700;letter-spacing:-.02em}
+header p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+main{max-width:640px;margin:0 auto;padding:16px 16px calc(96px + env(safe-area-inset-bottom))}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;border:0;background:none;padding:10px 0 9px;font:500 12px "Noto Sans KR";color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+nav button svg{width:22px;height:22px}
+nav button.on{color:var(--river)}
+.view{display:none}.view.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:12px}
+.eyebrow{font-size:11px;letter-spacing:.08em;color:var(--gold);font-weight:700;text-transform:uppercase}
+.quote{font-family:"Noto Serif KR",serif;font-size:19px;line-height:1.75;margin:10px 0 8px;word-break:keep-all}
+.meta{font-size:12.5px;color:var(--muted)}
+.de{font-style:italic;font-size:13px;color:var(--muted);margin-top:6px}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:9px 16px;font:500 14px "Noto Sans KR";cursor:pointer}
+.btn.primary{background:var(--river);border-color:var(--river);color:#fff}
+@media (prefers-color-scheme: dark){.btn.primary{color:#10191b}}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sp{justify-content:space-between}
+h2{font-family:"Noto Serif KR",serif;font-size:17px;margin:18px 4px 10px}
+.part{font-size:13px;color:var(--river);font-weight:700;margin:22px 4px 8px}
+.ch{cursor:pointer}
+.ch .t{display:flex;gap:12px;align-items:baseline}
+.ch .n{font-family:"Noto Serif KR",serif;color:var(--gold);font-weight:700;min-width:22px}
+.ch .nm{font-family:"Noto Serif KR",serif;font-weight:600;font-size:16px}
+.ch .one{font-size:13px;color:var(--muted);margin:4px 0 0 34px}
+.ch .body{display:none;margin:12px 0 0 34px;font-size:14.5px;word-break:keep-all}
+.ch.open .body{display:block}
+.ch .body ul{padding-left:18px;margin:6px 0}
+.ch .body li{margin-bottom:4px}
+.tag{display:inline-block;font-size:11px;background:var(--river-soft);color:var(--river);border-radius:6px;padding:1px 7px;margin-right:4px}
+.flash{min-height:300px;display:flex;flex-direction:column;justify-content:center;text-align:center;cursor:pointer;user-select:none}
+.flash .cue{font-size:16px;font-weight:500;word-break:keep-all}
+.flash .hint{font-size:12px;color:var(--muted);margin-top:16px}
+.prog{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin:6px 0 14px}
+.prog i{display:block;height:100%;background:var(--river);transition:width .3s}
+.opts{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.opt{text-align:left;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;padding:12px 14px;font:15px "Noto Sans KR";cursor:pointer}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.blank{display:inline-block;min-width:3.5em;border-bottom:2px solid var(--river);color:var(--river)}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px;margin-bottom:14px}
+.seg button{flex:1;border:0;background:none;border-radius:999px;padding:8px 4px;font:500 13px "Noto Sans KR";color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--river);color:var(--paper)}
+.stat{display:flex;gap:10px}
+.stat div{flex:1;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 6px}
+.stat b{display:block;font-family:"Noto Serif KR",serif;font-size:22px;color:var(--river)}
+.stat span{font-size:11.5px;color:var(--muted)}
+.river{display:block;width:100%;height:40px;margin:4px 0 2px;color:var(--river);opacity:.5}
+.note{font-size:12px;color:var(--muted);padding:4px 6px}
+.feedback{margin-top:12px;font-size:14px;word-break:keep-all}
+</style>
+</head>
+<body>
+<header>
+  <h1>젊은 베르테르의 슬픔 되뇌기</h1>
+  <p>요한 볼프강 폰 괴테 · 1774 · 줄거리와 문장을 매일 조금씩</p>
+</header>
+
+<main>
+  <!-- 오늘 -->
+  <section class="view on" id="v-today">
+    <div class="card">
+      <div class="eyebrow">오늘의 문장</div>
+      <div class="quote" id="todayQ"></div>
+      <div class="meta" id="todayM"></div>
+      <div class="de" id="todayDe"></div>
+      <svg class="river" viewBox="0 0 300 40" preserveAspectRatio="none"><path d="M0 20 Q 37 6 75 20 T 150 20 T 225 20 T 300 20" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M0 28 Q 37 14 75 28 T 150 28 T 225 28 T 300 28" fill="none" stroke="currentColor" stroke-width="1" opacity=".6"/></svg>
+      <div class="row sp">
+        <button class="btn" id="todayCh">이 문장이 나오는 장 보기</button>
+        <button class="btn" id="todayNext">다른 문장</button>
+      </div>
+    </div>
+    <div class="stat">
+      <div><b id="stKnown">0</b><span>외운 문장</span></div>
+      <div><b id="stQuiz">0</b><span>퀴즈 정답</span></div>
+      <div><b id="stStreak">0</b><span>연속 학습일</span></div>
+    </div>
+    <h2>한 문단으로 보는 『젊은 베르테르의 슬픔』</h2>
+    <div class="card serif" style="font-size:15px;line-height:1.85;word-break:keep-all">
+      감수성 풍부한 청년 베르테르는 시골 마을 발하임에서 친구 빌헬름에게 편지를 쓰며 자연 속의 기쁨을 노래한다. 무도회 가는 길에 만난 로테에게 첫눈에 반하지만, 그녀에게는 성실한 약혼자 알베르트가 있다. 견디지 못해 떠난 그는 공사관에서 일하지만 귀족 사회의 모욕을 겪고 돌아오고, 그 사이 로테는 알베르트와 결혼했다. 절망이 깊어 가던 크리스마스 무렵, 오시안의 노래를 낭독하다 로테를 끌어안은 그는 “다시는 저를 보지 마세요”라는 말을 듣는다. 그리고 알베르트에게 빌린, 로테가 손수 건넨 권총으로 생을 마감한다.
+    </div>
+    <h2>오늘 할 일</h2>
+    <div class="card">
+      <div class="row" style="gap:10px">
+        <button class="btn primary" data-go="cards">문장 카드 10장</button>
+        <button class="btn" data-go="quiz">퀴즈 풀기</button>
+        <button class="btn" data-go="story">줄거리 복습</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 줄거리 -->
+  <section class="view" id="v-story">
+    <div class="note">장을 누르면 자세한 줄거리와 핵심 문장이 펼쳐집니다.</div>
+    <div id="storyList"></div>
+  </section>
+
+  <!-- 문장 카드 -->
+  <section class="view" id="v-cards">
+    <div class="seg" id="cardMode">
+      <button data-m="all" class="on">전체</button>
+      <button data-m="todo">아직 못 외운 것</button>
+      <button data-m="known">외운 것</button>
+    </div>
+    <div class="row sp meta"><span id="cardPos"></span><span id="cardCh"></span></div>
+    <div class="prog"><i id="cardProg"></i></div>
+    <div class="card flash" id="flash"></div>
+    <div class="row sp">
+      <button class="btn" id="cPrev">← 이전</button>
+      <div class="row">
+        <button class="btn" id="cAgain">다시 볼래요</button>
+        <button class="btn primary" id="cKnow">외웠어요</button>
+      </div>
+    </div>
+    <p class="note" style="margin-top:14px">앞면의 질문을 보고 문장을 소리 내어 떠올린 다음, 카드를 눌러 확인하세요.</p>
+  </section>
+
+  <!-- 퀴즈 -->
+  <section class="view" id="v-quiz">
+    <div class="seg" id="quizMode">
+      <button data-m="blank" class="on">빈칸 채우기</button>
+      <button data-m="scene">어느 장일까?</button>
+      <button data-m="who">누가 한 말?</button>
+    </div>
+    <div class="card" id="quizBox"></div>
+    <div class="row sp"><span class="meta" id="quizScore"></span><button class="btn primary" id="qNext">다음 문제 →</button></div>
+  </section>
+
+  <p class="note" style="margin-top:24px">문장은 독일어 원문을 바탕으로 우리말로 옮긴 것이며, 일부는 뜻을 살려 줄였습니다(‘요지’ 표시). 편지 소설이라 ‘장’은 이야기 흐름에 따라 나눈 것입니다. 갖고 계신 번역본과 표현이 다를 수 있습니다.</p>
+</main>
+
+<nav>
+  <button data-v="today" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>오늘</button>
+  <button data-v="story"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5c3-1 5-1 8 1 3-2 5-2 8-1v14c-3-1-5-1-8 1-3-2-5-2-8-1z"/><path d="M12 6v14"/></svg>줄거리</button>
+  <button data-v="cards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="6" width="14" height="14" rx="2"/><path d="M8 3h10a2 2 0 0 1 2 2v11"/></svg>문장 카드</button>
+  <button data-v="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .8-1 1.5V14M12 17h.01"/></svg>퀴즈</button>
+</nav>
+
+<script>
+const CH = [
+ {n:1,part:1,name:"발하임에 오다",one:"1771년 5월 · 자연 속에서 되찾은 기쁨",
+  body:["젊은 베르테르는 집안 일을 정리하러 낯선 시골 마을 발하임 근처로 와서, 친구 빌헬름에게 편지를 쓴다. 이 소설은 대부분 그 편지들로 이루어져 있다.","봄의 자연, 마을 어귀의 샘물, 호메로스를 읽으며 보내는 고요한 시간에 그는 깊이 행복해한다.","소박한 마을 사람들과 아이들을 사랑하고, 틀에 박힌 사회와 이성적인 사람들을 답답해한다. 인간은 언제든 ‘이 감옥’을 떠날 수 있다는 자유의 감정도 품는다."],
+  key:"편지 형식 · 자연과 감정을 사랑하는 주인공"},
+ {n:2,part:1,name:"로테를 만나다",one:"6월 16일 · 무도회 가는 길의 첫 만남",
+  body:["시골 무도회에 함께 갈 아가씨 로테를 데리러 그녀의 집에 들른다. 로테는 어머니를 여읜 뒤 어린 동생들을 돌보고 있었고, 아이들에게 빵을 나눠주던 모습에 베르테르는 단번에 마음을 빼앗긴다.","가는 길에 그녀에게 이미 약혼자 알베르트가 있다는 말을 듣는다.","무도회에서 함께 춤춘 뒤 폭풍우가 지나가고, 창가에서 로테가 비 냄새를 맡으며 시인의 이름 ‘클롭슈토크!’를 말한다. 베르테르는 같은 감정을 느끼며 그녀의 손에 입 맞춘다."],
+  key:"첫눈에 빠진 사랑 — 그러나 그녀에게는 약혼자가 있다"},
+ {n:3,part:1,name:"사랑의 나날",one:"6~7월 · 매일 로테를 찾아가다",
+  body:["거의 매일 로테의 집을 찾아가 아이들과 놀고, 그녀와 함께 병든 이웃을 문병하며 행복에 젖는다.","로테의 손끝이 스치기만 해도 온몸이 떨린다. 그녀가 자신을 사랑하는 것 같다는 기대와 불안이 엇갈린다.","‘사랑 없는 세상은 불 꺼진 환등기와 같다’고 쓸 만큼 사랑이 그의 세계 전부가 된다."],
+  key:"행복의 절정이자 불안의 시작"},
+ {n:4,part:1,name:"알베르트",one:"7~8월 · 좋은 사람이라서 더 괴롭다",
+  body:["알베르트가 돌아온다. 그는 성실하고 침착하며 로테를 아끼는 좋은 사람이라, 베르테르는 그를 미워할 수도 없다.","8월 12일, 베르테르가 장난처럼 알베르트의 권총을 이마에 대자 둘은 자살을 두고 논쟁한다. 알베르트는 자살을 나약함이라 하고, 베르테르는 인간 본성에도 한계가 있어 병처럼 견딜 수 없는 고통이 있다고 맞선다.","예전엔 그토록 아름답던 자연이 이제는 모든 것을 삼키는 괴물처럼 보이기 시작한다."],
+  key:"권총 논쟁 — 결말을 예고하는 장면"},
+ {n:5,part:1,name:"떠남",one:"9월 10일 · 작별 인사 없이",
+  body:["이대로는 견딜 수 없다고 판단한 베르테르는 떠나기로 한다.","마지막 밤, 달빛 아래 정원에서 로테와 알베르트와 함께 앉아 죽은 뒤에도 다시 만날 수 있을지 이야기한다. 로테는 돌아가신 어머니를 떠올리며 ‘우리는 다시 만날 거예요’라고 말한다.","베르테르는 작별 인사를 하지 않은 채 다음 날 떠난다."],
+  key:"제1부의 끝"},
+ {n:6,part:2,name:"공사관에서",one:"1771년 10월~ · 일에 몰두해 보려 하다",
+  body:["베르테르는 공사(외교관) 밑에서 일하며 마음을 다잡으려 한다.","그러나 쉼표 하나까지 따지는 고지식한 공사와 계속 부딪친다. 출세와 서열에 목매는 사람들에게 염증을 느낀다.","그곳에서 마음이 통하는 폰 B. 양을 만나 로테 이야기를 나누며 위안을 얻는다."],
+  key:"사회 속에 적응하려는 시도"},
+ {n:7,part:2,name:"귀족 모임의 모욕",one:"1772년 3월 · 사회에서 밀려나다",
+  body:["호의적인 C 백작의 집에 식사하러 갔다가, 저녁에 모인 귀족들 사이에 시민계급인 그가 남아 있자 사람들이 수군거린다. 백작이 조심스럽게 그에게 자리를 떠 달라고 한다.","이 일이 소문나자 깊은 굴욕을 느끼고, 폰 B. 양마저 거리를 둔다.","결국 사직하고 떠난다. 잠시 한 영주에게 머물지만 그곳에서도 마음을 붙이지 못한다."],
+  key:"신분 사회와 감정적인 개인의 충돌"},
+ {n:8,part:2,name:"다시 발하임으로",one:"1772년 여름~가을 · 모든 것이 변해 있다",
+  body:["로테와 알베르트는 이미 결혼했다. 베르테르는 다시 그들 곁으로 돌아온다.","함께 앉아 있던 목사관의 호두나무가 베어졌다는 소식에 분노한다. 행복했던 시절의 흔적이 사라진다.","예전에 로테 아버지의 서기였다가 미쳐 버린 청년이 한겨울에 꽃을 찾아다니는 것을 본다. 그가 ‘행복했던 때’는 정신을 잃었을 때였다는 말에 베르테르는 큰 충격을 받는다.","과부를 사랑하던 머슴 청년이 연적을 죽인 사건이 일어나자, 베르테르는 자신과 그를 겹쳐 보며 변호하다 알베르트와 크게 부딪친다."],
+  key:"베르테르의 거울이 되는 인물들"},
+ {n:9,part:2,name:"오시안의 밤",one:"12월 20일 · 마지막 만남",
+  body:["여기서부터는 ‘편집자’가 남은 편지와 증언을 엮어 이야기를 이어간다.","로테는 크리스마스 이브 전까지는 찾아오지 말라고 부탁한다. 그러나 베르테르는 알베르트가 집을 비운 저녁에 찾아간다.","로테의 부탁으로 자신이 번역한 오시안의 슬픈 노래를 낭독하다가 둘 다 울음을 터뜨리고, 베르테르는 그녀를 끌어안고 입 맞춘다.","로테는 방으로 들어가며 말한다. ‘이것이 마지막이에요, 베르테르! 다시는 저를 보지 마세요.’"],
+  key:"감정이 폭발하는 절정"},
+ {n:10,part:2,name:"마지막",one:"12월 21~23일 · 노란 조끼와 파란 연미복",
+  body:["베르테르는 알베르트에게 ‘여행을 떠나니 권총을 빌려 달라’는 쪽지를 보낸다. 알베르트의 말에 로테는 떨리는 손으로 총의 먼지를 닦아 하인에게 건넨다.","그녀의 손을 거친 총이라는 사실에 베르테르는 기뻐하며 로테에게 마지막 편지를 쓴다.","자정 무렵, 처음 만났을 때 입었던 파란 연미복과 노란 조끼 차림으로 총을 쏜다. 다음 날 정오에 숨을 거둔다.","책상 위에는 펼쳐진 『에밀리아 갈로티』가 있었다. 직공들이 그의 관을 메었고, 성직자는 아무도 따르지 않았다."],
+  key:"비극적 결말"},
+];
+
+const Q = [
+ {id:"q1",ch:1,who:"베르테르",cue:"소설의 첫 편지는 어떤 외침으로 시작하는가?",
+  text:"떠나와서 얼마나 기쁜지 모르겠네!",de:"Wie froh bin ich, daß ich weg bin!",blank:"기쁜지",opts:["슬픈지","외로운지","후회되는지"]},
+ {id:"q2",ch:1,who:"베르테르",cue:"5월 10일, 봄의 자연 속에서 느낀 영혼의 상태는?",
+  text:"놀라운 명랑함이 내 영혼 전체를 사로잡았네. 내가 온 마음으로 즐기는 이 달콤한 봄날 아침처럼.",de:"Eine wunderbare Heiterkeit hat meine ganze Seele eingenommen…",blank:"명랑함",opts:["슬픔","고독","불안"]},
+ {id:"q3",ch:1,who:"베르테르",cue:"아무리 갇혀 있어도 인간이 마음 깊이 간직하는 자유의 감정이란?",
+  text:"아무리 갇혀 있어도 인간은 마음속에 늘 자유라는 달콤한 감정을 품고 있다. 원하면 언제든 이 감옥을 떠날 수 있다는.",tag:"요지",blank:"감옥",opts:["마을","사랑","세상"]},
+ {id:"q4",ch:2,who:"베르테르",cue:"빌헬름에게 로테를 처음 묘사하며 쓴 말은?",
+  text:"천사! 쳇, 누구나 자기 연인을 그렇게 부르지. 그런데도 나는 그녀가 얼마나 완벽한지, 왜 완벽한지 자네에게 말할 수가 없네.",tag:"요지",blank:"천사",opts:["여신","친구","꽃"]},
+ {id:"q5",ch:2,who:"로테",cue:"폭풍우가 지난 무도회장 창가에서 로테가 한 단 한 마디는?",
+  text:"클롭슈토크!",tag:"요지",blank:"클롭슈토크",opts:["호메로스","오시안","셰익스피어"]},
+ {id:"q6",ch:3,who:"베르테르",cue:"사랑 없는 세상을 무엇에 비유했는가?",
+  text:"빌헬름, 사랑 없는 세상이 우리 마음에 무슨 의미가 있겠나! 불 없는 환등기와 같은 것이지.",de:"Was ist unserem Herzen die Welt ohne Liebe! Was eine Zauberlaterne ist ohne Licht!",blank:"환등기",opts:["촛대","거울","정원"]},
+ {id:"q7",ch:4,who:"베르테르",cue:"권총 논쟁에서 자살을 나약함이라 부르는 알베르트에게 한 말은?",
+  text:"인간 본성에는 한계가 있네. 기쁨도 슬픔도 고통도 어느 정도까지는 견디지만, 그것을 넘으면 무너지고 말지.",tag:"요지",blank:"한계",opts:["끝","이유","목적"]},
+ {id:"q8",ch:4,who:"베르테르",cue:"‘이성적인 사람들’을 향한 베르테르의 탄식은?",
+  text:"아, 당신들 이성적인 사람들! 격정이니 취기니 광기니 하며 그렇게 침착하게, 그렇게 무심하게 서서 꾸짖기만 하는군요.",tag:"요지",blank:"이성적인",opts:["행복한","가난한","젊은"]},
+ {id:"q9",ch:4,who:"베르테르",cue:"8월 18일, 예전엔 낙원 같던 자연이 이제 어떻게 보이는가?",
+  text:"내 앞에서 무한한 생명의 무대가 영원한 무덤의 심연으로 바뀌었네. 자연은 이제 영원히 삼키고 영원히 되새김질하는 괴물로만 보이네.",tag:"요지",blank:"괴물",opts:["어머니","낙원","친구"]},
+ {id:"q10",ch:5,who:"로테",cue:"마지막 달밤, 죽은 뒤를 이야기하며 로테가 한 말은?",
+  text:"우리는 다시 만날 거예요. 어떤 모습이든 서로를 알아볼 거예요.",tag:"요지",blank:"다시 만날",opts:["잊혀질","헤어질","용서할"]},
+ {id:"q11",ch:6,who:"베르테르",cue:"공사관 시절, 출세와 서열에 매달리는 사람들을 보며 쓴 말은?",
+  text:"남들보다 한 자리라도 앞서려고 아등바등하는 이 비참한 정열이란! 그들은 제 앞자리만 노리느라 정작 삶을 놓친다.",tag:"요지",blank:"한 자리",opts:["한 푼","한 마디","한 걸음"]},
+ {id:"q12",ch:8,who:"베르테르",cue:"로테를 향한 감정이 모든 것을 삼켜 버린다는 고백은?",
+  text:"나는 많은 것을 가졌지만 그녀를 향한 감정이 모든 것을 삼켜 버리네. 나는 많은 것을 가졌지만, 그녀 없이는 모든 것이 아무것도 아니네.",de:"Ich habe so viel, und die Empfindung an ihr verschlingt alles; ich habe so viel, und ohne sie wird mir alles zu nichts.",blank:"삼켜",opts:["밝혀","채워","지켜"]},
+ {id:"q13",ch:8,who:"베르테르",cue:"한겨울에 꽃을 찾던 미친 청년이 ‘행복했던 때’를 말한 뒤, 베르테르가 느낀 것은?",
+  text:"인간이 행복할 수 있는 것은 이성을 갖기 전이나, 이성을 다시 잃은 뒤뿐이란 말인가!",tag:"요지",blank:"행복할",opts:["자유로울","슬퍼할","사랑할"]},
+ {id:"q14",ch:8,who:"베르테르",cue:"자신을 무엇에 빗대어 ‘너희는 그 이상이냐?’고 묻는가?",
+  text:"그래, 나는 이 땅 위의 나그네, 순례자일 뿐이다! 그런데 너희는 그 이상이란 말이냐?",de:"Ja wohl bin ich nur ein Wanderer, ein Waller auf der Erde! Seid ihr denn mehr?",blank:"나그네",opts:["시인","죄인","왕"]},
+ {id:"q15",ch:8,who:"베르테르",cue:"‘찬양받는 반신(半神)’이라는 인간에 대한 탄식은?",
+  text:"인간이란 무엇인가, 찬양받는 반신이여! 가장 힘이 필요한 바로 그때 힘이 모자라지 않는가?",de:"Was ist der Mensch, der gepriesene Halbgott!",blank:"반신",opts:["영웅","현자","천사"]},
+ {id:"q16",ch:9,who:"베르테르(오시안 낭독)",cue:"마지막 밤 낭독한 오시안의 노래 중 유명한 구절은?",
+  text:"봄바람이여, 왜 나를 깨우는가? … 내가 시들 때가 가까웠고, 내 잎을 흩날릴 폭풍이 가까웠다.",de:"Warum weckst du mich, Frühlingsluft?",blank:"봄바람",opts:["가을비","겨울밤","새벽별"]},
+ {id:"q17",ch:9,who:"로테",cue:"베르테르의 입맞춤 뒤, 방으로 들어가며 로테가 한 말은?",
+  text:"이것이 마지막이에요, 베르테르! 다시는 저를 보지 마세요.",tag:"요지",blank:"마지막",opts:["시작","비밀","약속"]},
+ {id:"q18",ch:10,who:"베르테르",cue:"로테가 건넨 권총을 받고 쓴 마지막 편지 구절은?",
+  text:"총은 장전되어 있소. 열두 시를 친다! 그러면 이제 — 로테! 로테, 안녕히! 안녕히!",de:"Lotte! Lotte, lebe wohl! lebe wohl!",blank:"열두 시",opts:["새벽","한 시","아홉 시"]},
+ {id:"q19",ch:10,who:"편집자",cue:"소설의 마지막 문장은?",
+  text:"직공들이 그를 메고 갔다. 성직자는 아무도 따르지 않았다.",de:"Handwerker trugen ihn. Kein Geistlicher hat ihn begleitet.",blank:"성직자",opts:["친구","로테","가족"]},
+ {id:"q20",ch:1,who:"편집자",cue:"소설 맨 앞, 편집자가 독자에게 건넨 말은?",
+  text:"가련한 베르테르의 이야기를 찾을 수 있는 대로 모아 여기 내놓는다. 여러분은 그의 정신과 성격에 감탄과 사랑을, 그의 운명에 눈물을 아끼지 않으리라.",tag:"요지",blank:"눈물",opts:["박수","분노","침묵"]},
+];
+
+const SCENES = [
+ {s:"마을 어귀 샘물가에서 물 길으러 온 하녀들을 보며 옛 족장 시대를 떠올린다.",ch:1},
+ {s:"어린 동생들에게 빵을 잘라 나눠주는 아가씨를 처음 본다.",ch:2},
+ {s:"폭풍우가 지난 창가에서 함께 시인의 이름을 떠올린다.",ch:2},
+ {s:"그녀와 함께 병든 목사 부인을 문병하고, 아이들과 놀아 준다.",ch:3},
+ {s:"장난으로 권총을 이마에 대자 자살에 관한 논쟁이 벌어진다.",ch:4},
+ {s:"자연이 모든 것을 삼키는 괴물처럼 보이기 시작한다.",ch:4},
+ {s:"달빛 아래 정원에서 죽은 뒤 다시 만날 수 있을지 이야기한다.",ch:5},
+ {s:"쉼표 하나까지 고치라는 고지식한 상관과 부딪친다.",ch:6},
+ {s:"귀족들 모임에서 자리를 비켜 달라는 부탁을 받는다.",ch:7},
+ {s:"목사관의 호두나무가 베어졌다는 소식에 분노한다.",ch:8},
+ {s:"한겨울에 연인에게 줄 꽃을 찾아다니는 미친 청년을 만난다.",ch:8},
+ {s:"연적을 죽인 머슴 청년을 변호하다 친구와 크게 부딪친다.",ch:8},
+ {s:"번역한 슬픈 노래를 낭독하다 둘 다 눈물을 터뜨린다.",ch:9},
+ {s:"그녀가 떨리는 손으로 총의 먼지를 닦아 하인에게 건넨다.",ch:10},
+ {s:"파란 연미복과 노란 조끼를 입은 채 발견된다.",ch:10},
+ {s:"공사관에서 마음이 통하는 아가씨 폰 B.를 만난다.",ch:6},
+];
+
+/* ---------- storage (안전하게) ---------- */
+const store = {
+  get(k,d){try{const v=localStorage.getItem("wer_"+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem("wer_"+k,JSON.stringify(v))}catch(e){}}
+};
+let known = new Set(store.get("known",[]));
+let quizRight = store.get("quizRight",0);
+function streak(){
+  const today=new Date().toDateString();
+  let s=store.get("streak",{last:null,n:0});
+  if(s.last!==today){
+    const y=new Date(Date.now()-864e5).toDateString();
+    s={last:today,n:s.last===y?s.n+1:1};store.set("streak",s);
+  }
+  return s.n;
+}
+function stats(){
+  document.getElementById("stKnown").textContent=known.size+"/"+Q.length;
+  document.getElementById("stQuiz").textContent=quizRight;
+  document.getElementById("stStreak").textContent=streak();
+}
+
+/* ---------- navigation ---------- */
+const views=["today","story","cards","quiz"];
+function go(v){
+  views.forEach(x=>document.getElementById("v-"+x).classList.toggle("on",x===v));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  window.scrollTo(0,0);
+  if(location.hash!=="#"+v) history.replaceState(null,"","#"+v);
+}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(views.includes(h))go(h)});
+
+const chName=n=>CH[n-1].name;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+/* ---------- 오늘 ---------- */
+let todayIdx=Math.floor(new Date().setHours(0,0,0,0)/864e5)%Q.length;
+function renderToday(){
+  const q=Q[todayIdx];
+  document.getElementById("todayQ").textContent="“"+q.text+"”";
+  document.getElementById("todayM").textContent=`${q.ch}장 「${chName(q.ch)}」 · ${q.who}${q.tag?" · "+q.tag:""}`;
+  document.getElementById("todayDe").textContent=q.de||"";
+}
+document.getElementById("todayNext").onclick=()=>{todayIdx=(todayIdx+1+Math.floor(Math.random()*(Q.length-1)))%Q.length;renderToday()};
+document.getElementById("todayCh").onclick=()=>{go("story");openCh(Q[todayIdx].ch)};
+
+/* ---------- 줄거리 ---------- */
+function renderStory(){
+  let h="";
+  CH.forEach(c=>{
+    if(c.n===1) h+=`<div class="part">제1부 · 사랑의 봄과 여름</div>`;
+    if(c.n===6) h+=`<div class="part">제2부 · 무너져 가는 마음</div>`;
+    const qs=Q.filter(q=>q.ch===c.n);
+    h+=`<div class="card ch" id="ch${c.n}">
+      <div class="t"><span class="n">${c.n}</span><span class="nm">${c.name}</span></div>
+      <div class="one">${c.one}</div>
+      <div class="body">
+        <span class="tag">핵심</span>${c.key}
+        <ul>${c.body.map(b=>`<li>${b}</li>`).join("")}</ul>
+        ${qs.map(q=>`<div class="quote" style="font-size:15.5px;border-left:3px solid var(--river);padding-left:12px">“${q.text}”<div class="meta">${q.who}${q.tag?" · "+q.tag:""}</div></div>`).join("")}
+      </div></div>`;
+  });
+  const el=document.getElementById("storyList");el.innerHTML=h;
+  el.querySelectorAll(".ch").forEach(c=>c.onclick=()=>c.classList.toggle("open"));
+}
+function openCh(n){const el=document.getElementById("ch"+n);el.classList.add("open");setTimeout(()=>el.scrollIntoView({behavior:"smooth",block:"start"}),50)}
+
+/* ---------- 문장 카드 ---------- */
+let mode="all",deck=[],pos=0,flipped=false;
+function buildDeck(){
+  deck=Q.filter(q=>mode==="all"||(mode==="known"?known.has(q.id):!known.has(q.id)));
+  if(mode!=="known") deck=shuffle(deck);
+  pos=0;flipped=false;renderCard();
+}
+function renderCard(){
+  const f=document.getElementById("flash");
+  document.getElementById("cardProg").style.width=(known.size/Q.length*100)+"%";
+  if(!deck.length){
+    f.innerHTML=`<div class="cue">${mode==="todo"?"모든 문장을 외웠어요! 🌊<br><span class='meta'>‘전체’에서 다시 되뇌어 보세요.</span>":"아직 이 목록에 문장이 없어요."}</div>`;
+    document.getElementById("cardPos").textContent="";document.getElementById("cardCh").textContent="";return;
+  }
+  const q=deck[pos];
+  document.getElementById("cardPos").textContent=`${pos+1} / ${deck.length}`;
+  document.getElementById("cardCh").textContent=`${q.ch}장 「${chName(q.ch)}」${known.has(q.id)?" · ✓ 외움":""}`;
+  f.innerHTML=flipped
+    ? `<div class="quote">“${q.text}”</div><div class="meta">${q.who}${q.tag?" · "+q.tag:""}</div>${q.de?`<div class="de">${q.de}</div>`:""}`
+    : `<div class="eyebrow">떠올려 보세요</div><div class="cue" style="margin-top:10px">${q.cue}</div><div class="hint">눌러서 문장 보기</div>`;
+}
+document.getElementById("flash").onclick=()=>{if(deck.length){flipped=!flipped;renderCard()}};
+function nextCard(){if(!deck.length)return;pos=(pos+1)%deck.length;flipped=false;renderCard()}
+document.getElementById("cPrev").onclick=()=>{if(!deck.length)return;pos=(pos-1+deck.length)%deck.length;flipped=false;renderCard()};
+document.getElementById("cKnow").onclick=()=>{
+  if(!deck.length)return;known.add(deck[pos].id);store.set("known",[...known]);stats();
+  if(mode==="todo"){deck.splice(pos,1);if(pos>=deck.length)pos=0;flipped=false;renderCard()}else nextCard();
+};
+document.getElementById("cAgain").onclick=()=>{
+  if(!deck.length)return;known.delete(deck[pos].id);store.set("known",[...known]);stats();
+  if(mode==="known"){deck.splice(pos,1);if(pos>=deck.length)pos=0;flipped=false;renderCard()}else nextCard();
+};
+document.querySelectorAll("#cardMode button").forEach(b=>b.onclick=()=>{
+  mode=b.dataset.m;document.querySelectorAll("#cardMode button").forEach(x=>x.classList.toggle("on",x===b));buildDeck();
+});
+
+/* ---------- 퀴즈 ---------- */
+let qmode="blank",asked=0,right=0;
+function newQuiz(){
+  const box=document.getElementById("quizBox");let html="",answer,choices;
+  if(qmode==="blank"){
+    const q=Q[Math.floor(Math.random()*Q.length)];
+    const shown=esc(q.text).replace(q.blank,'<span class="blank">　?　</span>');
+    answer=q.blank;choices=shuffle([q.blank,...q.opts]);
+    html=`<div class="eyebrow">빈칸 채우기 · ${q.ch}장</div><div class="quote">“${shown}”</div><div class="meta">${q.who}</div>`;
+    box.dataset.full=q.text;
+  }else if(qmode==="scene"){
+    const s=SCENES[Math.floor(Math.random()*SCENES.length)];
+    answer=`${s.ch}장 ${chName(s.ch)}`;
+    const others=shuffle(CH.filter(c=>c.n!==s.ch)).slice(0,3).map(c=>`${c.n}장 ${c.name}`);
+    choices=shuffle([answer,...others]);
+    html=`<div class="eyebrow">이 장면은 어느 장일까?</div><div class="quote" style="font-size:17px">${s.s}</div>`;
+    box.dataset.full=`${s.ch}장 「${chName(s.ch)}」 — ${CH[s.ch-1].one}`;
+  }else{
+    const pool=Q.filter(q=>q.who!=="서술");
+    const q=pool[Math.floor(Math.random()*pool.length)];
+    const whoAll=["베르테르","로테","알베르트","편집자","빌헬름"];
+    answer=q.who.startsWith("베르테르")?"베르테르":q.who;
+    choices=shuffle([answer,...shuffle(whoAll.filter(w=>w!==answer)).slice(0,3)]);
+    html=`<div class="eyebrow">누가 한 말일까?</div><div class="quote">“${q.text}”</div>`;
+    box.dataset.full=`${q.ch}장 「${chName(q.ch)}」에서 ${q.who}`;
+  }
+  html+=`<div class="opts">${choices.map(c=>`<button class="opt">${c}</button>`).join("")}</div><div class="feedback" id="fb"></div>`;
+  box.innerHTML=html;
+  box.querySelectorAll(".opt").forEach(o=>o.onclick=()=>{
+    if(box.dataset.done)return;box.dataset.done="1";asked++;
+    const ok=o.textContent===answer;
+    box.querySelectorAll(".opt").forEach(x=>{if(x.textContent===answer)x.classList.add("right")});
+    if(ok){right++;quizRight++;store.set("quizRight",quizRight);stats()}else o.classList.add("wrong");
+    document.getElementById("fb").innerHTML=(ok?"<b style='color:var(--ok)'>정답!</b> ":"<b style='color:var(--bad)'>아쉬워요.</b> ")+esc(box.dataset.full);
+    document.getElementById("quizScore").textContent=`이번 회차 ${right} / ${asked}`;
+  });
+  delete box.dataset.done;
+}
+document.getElementById("qNext").onclick=newQuiz;
+document.querySelectorAll("#quizMode button").forEach(b=>b.onclick=()=>{
+  qmode=b.dataset.m;document.querySelectorAll("#quizMode button").forEach(x=>x.classList.toggle("on",x===b));newQuiz();
+});
+
+/* ---------- init ---------- */
+renderToday();renderStory();buildDeck();newQuiz();stats();
+const h0=location.hash.slice(1);if(views.includes(h0))go(h0);
+</script>
+</body>
+</html>
